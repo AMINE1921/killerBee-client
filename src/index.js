@@ -1,4 +1,4 @@
-import React from "react";
+import React from "reactn";
 import ReactDOM from "react-dom/client";
 import "./styles/style.scss";
 import "./store/index";
