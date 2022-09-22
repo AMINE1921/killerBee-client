@@ -1,0 +1,64 @@
+#loginPage {
+  background: $black;
+  min-height: 100vh;
+  .loginForm {
+    overflow: hidden;
+    background-color: $white;
+    padding: 40px 30px 30px 30px;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 390px;
+    transform: translate(-50%, -50%);
+    box-shadow: 5px 10px 10px rgba($black, 0.2);
+    .logo {
+      @include verticalCenter;
+      display: flex;
+      flex-direction: column;
+      margin: 10px;
+      .logoPic {
+        width: 15%;
+        margin-bottom: 5px;
+      }
+      .logoText {
+        font-weight: 200;
+        font-size: 1rem;
+        color: #a4a6b3;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    }
+    .titleConnect {
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: $black;
+      margin-bottom: 40px;
+    }
+    .ant-form-item-label {
+      label {
+        color: #9fa2b4;
+        font-weight: bold;
+      }
+    }
+    input[type="email"],
+    .ant-input-password {
+      background: #fcfdfe;
+      border-radius: 10px;
+      border: 1px solid #f0f1f7;
+      padding: 12px;
+      &:focus {
+        border: 1px solid $primary;
+      }
+    }
+    button {
+      background: $primary;
+      border-color: $primary;
+    }
+  }
+}

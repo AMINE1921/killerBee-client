@@ -7,11 +7,13 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.23.2",
+    "axios": "^0.27.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
+    "react-toastify": "^9.0.8",
     "reactn": "^2.2.7",
     "reactn-devtools": "^1.1.0",
     "redux": "^4.2.0",
@@ -53,5 +55,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "use-force-update": "1.0.8"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.1",
+    "eslint-plugin-react": "^7.31.8"
   }
 }
