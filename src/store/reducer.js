@@ -9,7 +9,7 @@ addReducer("updateUserInfos", (global, dispatch, newUser) => {
   setGlobal({ user: newUser });
 });
 
-addReducer("resetUserInfos", (global, dispatch, user) => {
+addReducer("resetUserInfos", (global, dispatch) => {
   const newUser = {
     id: "",
     firstname: "",

@@ -1,0 +1,19 @@
+#NavBar {
+  .ant-menu-item-selected {
+    background-color: #9fa2b41c !important;
+    border-left: solid $white;
+  }
+  .ant-menu {
+    background: $teriary;
+  }
+  .ant-layout-sider-children {
+    background: $teriary;
+  }
+  .logo {
+    @include verticalCenter;
+    margin: 50px;
+    .logoPic {
+      width: 100%;
+    }
+  }
+}
