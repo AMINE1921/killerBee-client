@@ -1,46 +1,41 @@
 import React, { useState, useDispatch, useEffect } from "reactn";
-import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBaseball, faCubesStacked, faIndustry, faRightFromBracket, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { Menu, Layout } from "antd";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import logoKillerBee from "../../assets/img/KillerBee_logoWhite.png";
 import { logOutUser } from "../../utils/api/user";
-import { isEmpty } from "lodash";
 
 const NavBar = () => {
   const { Sider } = Layout;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [itemSelected, setItemSelected] = useState();
+  const [itemSelected, setItemSelected] = useState(["home"]);
   const { pathname } = useLocation();
   const items = [
     {
       key: "home",
-      icon: <AppstoreOutlined />,
+      icon: <FontAwesomeIcon icon={faHouse} />,
       label: "Accueil",
     },
     {
       key: "frisbee",
-      icon: <MailOutlined />,
+      icon: <FontAwesomeIcon icon={faBaseball} />,
       label: "Frisbee",
     },
     {
       key: "ingredients",
-      icon: <MailOutlined />,
+      icon: <FontAwesomeIcon icon={faCubesStacked} />,
       label: "Ingrédients",
     },
     {
       key: "process",
-      icon: <SettingOutlined />,
+      icon: <FontAwesomeIcon icon={faIndustry} />,
       label: "Procédés",
     },
     {
       key: "logout",
-      icon: <LogoutOutlined />,
+      icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       label: "Se déconnecter",
     },
   ];
@@ -52,7 +47,9 @@ const NavBar = () => {
       ? setItemSelected(["frisbee"])
       : matchPath("/ingredients", pathname)
       ? setItemSelected(["ingredients"])
-      : matchPath("/process", pathname) && setItemSelected(["process"]);
+      : matchPath("/process", pathname)
+      ? setItemSelected(["process"])
+      : setItemSelected([]);
   }, [pathname]);
 
   const onSelectItem = (item) => {
@@ -91,7 +88,7 @@ const NavBar = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={!isEmpty(itemSelected) ? itemSelected : ["home"]}
+        defaultSelectedKeys={itemSelected}
         selectedKeys={itemSelected}
         items={items}
         onSelect={onSelectItem}

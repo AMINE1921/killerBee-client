@@ -1,0 +1,15 @@
+#Header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 3%;
+  .title {
+    font-weight: bolder;
+    font-size: 2rem;
+  }
+  .profileAvatar {
+    .name {
+      margin-right: 10px;
+    }
+  }
+}
