@@ -2,9 +2,11 @@ import React from "reactn";
 import { Space, Table, Tag, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faFaceSadTear } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const TableFlex = ({ page, data, deleteItem }) => {
   const { Column } = Table;
+  const navigate = useNavigate();
 
   return (
     <div id="Table">
@@ -22,7 +24,12 @@ const TableFlex = ({ page, data, deleteItem }) => {
         }}
       >
         <Column title="Nom" dataIndex="name" key="name" />
-        <Column title="Description" dataIndex="description" key="description" responsive={["sm"]} />
+        <Column
+          title="Description"
+          dataIndex="description"
+          key="description"
+          responsive={["sm"]}
+        />
         {page === "frisbee" && (
           <>
             <Column
@@ -83,6 +90,11 @@ const TableFlex = ({ page, data, deleteItem }) => {
                 type="primary"
                 shape="round"
                 size="middle"
+                onClick={() =>
+                  navigate(`/${page}/${record?._id}`, {
+                    state: { id: record?._id },
+                  })
+                }
               >
                 Modifier
               </Button>

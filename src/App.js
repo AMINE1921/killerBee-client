@@ -11,8 +11,7 @@ import Home from "./pages/Home";
 import Frisbee from "./pages/Frisbee";
 import Ingredients from "./pages/Ingredients";
 import Process from "./pages/Process";
-import Add from "./pages/Add";
-import Edit from "./pages/Edit";
+import AddEdit from "./pages/AddEdit";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -56,8 +55,10 @@ function App() {
               <Route path="/ingredients" element={<Ingredients />} />
             )}
             {isLogged && <Route path="/process" element={<Process />} />}
-            {isLogged && <Route path={"/add"} element={<Add />} />}
-            {isLogged && <Route path={"/:id"} element={<Edit />} />}
+            {isLogged && <Route path={"/add"} element={<AddEdit />} />}
+            {isLogged && <Route path={"/frisbee/:id"} element={<AddEdit edit={true} type={"frisbee"} />} />}
+            {isLogged && <Route path={"/ingredients/:id"} element={<AddEdit edit={true} type={"ingredient"} />} />}
+            {isLogged && <Route path={"/process/:id"} element={<AddEdit edit={true} type={"process"} />} />}
 
             <Route path="*" element={<NotFound />} />
           </Routes>
