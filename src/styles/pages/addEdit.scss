@@ -1,0 +1,51 @@
+#AddEdit {
+  .ant-steps {
+    flex-direction: row;
+    .ant-steps-item {
+      @media (max-width: 575px) {
+        @include verticalCenter;
+      }
+      .ant-steps-item-content {
+        display: none;
+        width: 0px;
+      }
+    }
+    .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+      background: $primary;
+      border-color: $primary;
+    }
+    .ant-steps-item-finish .ant-steps-item-icon {
+      border-color: $primary;
+      .ant-steps-icon {
+        color: $primary;
+      }
+    }
+  }
+  .steps-action {
+    position: fixed;
+    bottom: 50px;
+    width: 82%;
+    @media (max-width: 575px) {
+      width: 85%;
+    }
+    @include verticalCenter;
+  }
+  .ant-steps-navigation .ant-steps-item::before {
+    background-color: $primary;
+  }
+  .previousButton {
+    margin-right: 10px;
+    &:hover {
+      border-color: $primary;
+      color: $primary;
+    }
+  }
+  .sendNextButton {
+    background: $primary;
+    border-color: $primary;
+    color: $white;
+    &:hover {
+      border-color: $white;
+    }
+  }
+}
