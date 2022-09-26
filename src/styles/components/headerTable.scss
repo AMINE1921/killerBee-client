@@ -1,0 +1,13 @@
+#HeaderTable {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 10px;
+  .ant-input-group-addon {
+    display: none;
+  }
+  button {
+    background: $teriary;
+    border-color: $teriary;
+    color: $white;
+  }
+}

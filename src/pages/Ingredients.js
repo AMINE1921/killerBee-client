@@ -1,9 +1,12 @@
-import React, {useEffect, useState} from "reactn";
+import React, { useEffect, useState } from "reactn";
+import { isEmpty } from "lodash";
 import TableFlex from "../components/Table/TableFlex";
+import HeaderTable from "../components/Table/HeaderTable";
 import { getListIngredient, deleteIngredient } from "../utils/api/ingredient";
 import toastNotif from "../utils/toastNotif";
 
 const Ingredients = () => {
+  const [listIngredientsOriginal, setListIngredientsOriginal] = useState([]);
   const [listIngredients, setListIngredients] = useState([]);
 
   useEffect(() => {
@@ -15,6 +18,7 @@ const Ingredients = () => {
       .then((response) => {
         if (response?.success) {
           setListIngredients(response?.ingredients);
+          setListIngredientsOriginal(response?.ingredients);
         }
       })
       .catch((err) => {
@@ -35,9 +39,24 @@ const Ingredients = () => {
       });
   };
 
+  const onSearch = (value) => {
+    !isEmpty(value)
+      ? setListIngredients(
+          listIngredients.filter((el) => {
+            return el?.name?.startsWith(value);
+          })
+        )
+      : setListIngredients(listIngredientsOriginal);
+  };
+
   return (
     <div>
-      <TableFlex page="ingredients" data={listIngredients} deleteItem={deleteItem} />
+      <HeaderTable onChangeSearch={(v) => onSearch(v)} type="ingredients" />
+      <TableFlex
+        page="ingredients"
+        data={listIngredients}
+        deleteItem={deleteItem}
+      />
     </div>
   );
 };
