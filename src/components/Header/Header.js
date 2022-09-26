@@ -1,6 +1,7 @@
 import React, { useGlobal, useState, useEffect } from "reactn";
 import { matchPath } from "react-router-dom";
 import { Avatar } from "antd";
+import { isMobile } from "react-device-detect";
 
 const Header = ({ pathname }) => {
   const [global] = useGlobal();
@@ -24,19 +25,23 @@ const Header = ({ pathname }) => {
   return (
     <div id="Header">
       <div className="title">{title}</div>
-      <div className="profileAvatar">
-        <span className="name">{user?.firstname} {user?.lastname}</span>
-        <Avatar
-          style={{
-            backgroundColor: "#2f3640",
-            verticalAlign: "middle",
-          }}
-          size="large"
-        >
-          {user?.firstname?.substring(0, 1).toUpperCase() +
-            user?.lastname?.substring(0, 1)?.toUpperCase()}
-        </Avatar>
-      </div>
+      {!isMobile && (
+        <div className="profileAvatar">
+          <span className="name">
+            {user?.firstname} {user?.lastname}
+          </span>
+          <Avatar
+            style={{
+              backgroundColor: "#2f3640",
+              verticalAlign: "middle",
+            }}
+            size="large"
+          >
+            {user?.firstname?.substring(0, 1).toUpperCase() +
+              user?.lastname?.substring(0, 1)?.toUpperCase()}
+          </Avatar>
+        </div>
+      )}
     </div>
   );
 };
