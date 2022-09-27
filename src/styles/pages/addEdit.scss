@@ -30,6 +30,15 @@
     }
     @include verticalCenter;
   }
+  .steps-content {
+    margin-top: 15px;
+    .ant-row {
+      align-items: center;
+      .ant-input-number {
+        width: 100%;
+      }
+    }
+  }
   .ant-steps-navigation .ant-steps-item::before {
     background-color: $primary;
   }
@@ -47,5 +56,8 @@
     &:hover {
       border-color: $white;
     }
+  }
+  .ant-form-item {
+    margin-bottom: unset !important;
   }
 }
