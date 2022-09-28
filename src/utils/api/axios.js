@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost/api";
+const baseURL = "https://localhost/api";
 import toastNotif from "../toastNotif";
 
 const axiosConfig = axios.create({
