@@ -1,0 +1,30 @@
+#Home {
+  .ant-card {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    .ant-card-head-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #9fa2b4;
+    }
+    .ant-card-body {
+      span {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    }
+    &:hover {
+      border: 1px solid $primary;
+      cursor: pointer;
+      .ant-card-head-title {
+        color: $primary;
+      }
+    }
+  }
+}
