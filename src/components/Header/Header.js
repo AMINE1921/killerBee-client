@@ -1,9 +1,11 @@
 import React, { useGlobal, useState, useEffect } from "reactn";
-import { matchPath } from "react-router-dom";
+import { matchPath, useLocation } from "react-router-dom";
 import { Avatar } from "antd";
 import { isMobile } from "react-device-detect";
+import { isEmpty } from "lodash";
 
 const Header = ({ pathname }) => {
+  const { state } = useLocation();
   const [global] = useGlobal();
   const { user } = global;
   const [title, setTitle] = useState("");
@@ -18,9 +20,29 @@ const Header = ({ pathname }) => {
       : matchPath("/process", pathname)
       ? setTitle("Gestion des procédés")
       : matchPath("/add", pathname)
-      ? setTitle("Ajouter un élement")
-      : setTitle("Modifier l'élement");
-  }, [pathname]);
+      ? setTitle(
+          `Ajouter un ${
+            !isEmpty(state) && state?.type === "frisbee"
+              ? "Frisbee"
+              : state?.type === "ingredient"
+              ? "Ingrédient"
+              : state?.type === "process"
+              ? "Procédé"
+              : "Frisbee"
+          }`
+        )
+      : setTitle(
+        `Modification - ${
+          !isEmpty(state) && state?.type === "frisbee"
+            ? "Frisbee"
+            : state?.type === "ingredient"
+            ? "Ingrédient"
+            : state?.type === "process"
+            ? "Procédé"
+            : "Frisbee"
+        }`
+      );
+  }, [pathname, state]);
 
   return (
     <div id="Header">

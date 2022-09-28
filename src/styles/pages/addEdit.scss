@@ -60,4 +60,17 @@
   .ant-form-item {
     margin-bottom: unset !important;
   }
+
+  .formList {
+    width: 100%;
+    .ant-space-item:first-child,
+    .ant-space-item:nth-child(2) {
+      width: 100%;
+    }
+
+    .ant-form-item-label {
+      min-width: 100%;
+      text-align: center;
+    }
+  }
 }

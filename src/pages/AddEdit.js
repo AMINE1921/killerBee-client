@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { isEmpty } from "lodash";
+import { isEmpty, range } from "lodash";
 import { isMobile } from "react-device-detect";
 import { Button, Steps, Form, Input, InputNumber, Select, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -12,10 +12,16 @@ import {
   updateIngredient,
 } from "../utils/api/ingredient";
 import {
+  getListFrisbee,
   createFrisbee,
   getFrisbeeById,
   updateFrisbee,
 } from "../utils/api/frisbee";
+import {
+  createProcess,
+  getProcessById,
+  updateProcess,
+} from "../utils/api/process";
 
 const AddEdit = ({ edit }) => {
   const { state } = useLocation();
@@ -23,11 +29,13 @@ const AddEdit = ({ edit }) => {
   const { Step } = Steps;
   const { Option } = Select;
   const [form] = Form.useForm();
+  const listNumSteps = range(1, 41);
   const [idEl, setIdEl] = useState();
   const [type, setType] = useState();
   const [current, setCurrent] = useState(0);
   const [stepsToShow, setStepsToShow] = useState();
   const [listIngredients, setListIngredients] = useState([]);
+  const [listFrisbees, setListFrisbees] = useState([]);
   const [formValues, setFormValues] = useState();
 
   const stepsFrisbee = [
@@ -83,6 +91,8 @@ const AddEdit = ({ edit }) => {
 
       if (type === "frisbee") {
         getAllIngredients();
+      } else if (type === "process") {
+        getAllFrisbee();
       }
     } else {
       setStepsToShow(stepsFrisbee);
@@ -95,14 +105,22 @@ const AddEdit = ({ edit }) => {
         case "frisbee":
           getFrisbeeById(idEl).then((response) => {
             if (response?.success) {
-              Object.entries(response?.frisbee).forEach(([key, value]) =>
-                form.setFields([
-                  {
-                    name: [key],
-                    value: value,
-                  },
-                ])
-              );
+              Object.entries(response?.frisbee).forEach(([key, value]) => {
+                if (key === "ingredients") {
+                  form.setFieldsValue({
+                    ingredients: value?.map((value) => {
+                      return {
+                        ingredientId: value?.ingredientId?._id,
+                        weight: value?.weight,
+                      };
+                    }),
+                  });
+                } else {
+                  form.setFieldsValue({
+                    [key]: value,
+                  });
+                }
+              });
             }
           });
           break;
@@ -121,8 +139,20 @@ const AddEdit = ({ edit }) => {
           });
           break;
         case "process":
-          getIngredientById(idEl).then((response) => {
-            console.log(response);
+          getProcessById(idEl).then((response) => {
+            if (response?.success) {
+              Object.entries(response?.process).forEach(([key, value]) => {
+                if (key === "model") {
+                  form.setFieldsValue({
+                    model: value?._id,
+                  });
+                } else {
+                  form.setFieldsValue({
+                    [key]: value,
+                  });
+                }
+              });
+            }
           });
           break;
         default:
@@ -136,6 +166,18 @@ const AddEdit = ({ edit }) => {
       .then((response) => {
         if (response?.success) {
           setListIngredients(response?.ingredients);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getAllFrisbee = () => {
+    getListFrisbee()
+      .then((response) => {
+        if (response?.success) {
+          setListFrisbees(response?.frisbees);
         }
       })
       .catch((err) => {
@@ -163,7 +205,6 @@ const AddEdit = ({ edit }) => {
       ...formValues,
       ...form?.getFieldsValue(),
     };
-    console.log(newValues);
     setFormValues(newValues);
     if (edit && !isEmpty(type)) {
       switch (type) {
@@ -192,9 +233,16 @@ const AddEdit = ({ edit }) => {
             });
           break;
         case "process":
-          // getIngredientById(idEl).then((response) => {
-          //   console.log(response);
-          // });
+          updateProcess(newValues, idEl)
+            .then((response) => {
+              if (response?.success) {
+                navigate(!isEmpty(type) ? `/${type}` : "/");
+                toastNotif("Procédé mis à jour !", "success");
+              }
+            })
+            .catch((error) => {
+              toastNotif(error?.data?.error, "error");
+            });
           break;
         default:
           break;
@@ -226,9 +274,16 @@ const AddEdit = ({ edit }) => {
             });
           break;
         case "process":
-          // getIngredientById(idEl).then((response) => {
-          //   console.log(response);
-          // });
+          createProcess(newValues)
+            .then((response) => {
+              if (response?.success) {
+                navigate(!isEmpty(type) ? `/${type}` : "/");
+                toastNotif("Procédé crée !", "success");
+              }
+            })
+            .catch((error) => {
+              toastNotif(error?.data?.error, "error");
+            });
           break;
         default:
           break;
@@ -336,82 +391,204 @@ const AddEdit = ({ edit }) => {
                       </Form.Item>
                     );
 
+                  case "model":
+                    return (
+                      <Form.Item
+                        label="Modèle"
+                        name="model"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Veillez choisir un modèle !",
+                          },
+                        ]}
+                      >
+                        <Select>
+                          {listFrisbees.map((frisb) => {
+                            return (
+                              <Select.Option
+                                key={frisb?._id}
+                                value={frisb?._id}
+                              >
+                                {frisb?.name}
+                              </Select.Option>
+                            );
+                          })}
+                        </Select>
+                      </Form.Item>
+                    );
+
                   case "ingredients":
                     return (
-                      <Form.List name="ingredients">
-                        {(fields, { add, remove }) => (
-                          <>
-                            {fields.map((field) => (
-                              <Space key={field.key} align="baseline">
-                                <Form.Item
-                                  noStyle
-                                  shouldUpdate={(prevValues, curValues) =>
-                                    prevValues.area !== curValues.area ||
-                                    prevValues.sights !== curValues.sights
-                                  }
+                      <div className="formList">
+                        <Form.List name="ingredients">
+                          {(fields, { add, remove }) => (
+                            <>
+                              {fields.map((field) => (
+                                <Space
+                                  key={field.key}
+                                  style={{
+                                    display: "flex",
+                                    marginBottom: 8,
+                                  }}
+                                  align="baseline"
                                 >
-                                  {() => (
-                                    <Form.Item
-                                      {...field}
-                                      label="Ingredient"
-                                      name={[field.name, "ingredientId"]}
-                                      rules={[
-                                        {
-                                          required: true,
-                                          message:
-                                            "Veillez choisir un ingrédient !",
-                                        },
-                                      ]}
-                                    >
-                                      <Select>
-                                        {listIngredients.map((ingr) => {
-                                          return (
-                                            <Select.Option
-                                              key={ingr?._id}
-                                              value={ingr?._id}
-                                            >
-                                              {ingr?.name}
-                                            </Select.Option>
-                                          );
-                                        })}
-                                      </Select>
-                                    </Form.Item>
-                                  )}
-                                </Form.Item>
-                                <Form.Item
-                                  {...field}
-                                  label="Grammage"
-                                  name={[field.name, "weight"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message:
-                                        "Veillez indiquer le grammage de l'ingrédient !",
-                                    },
-                                  ]}
+                                  <Form.Item
+                                    noStyle
+                                    shouldUpdate={(prevValues, curValues) =>
+                                      prevValues.area !== curValues.area ||
+                                      prevValues.sights !== curValues.sights
+                                    }
+                                  >
+                                    {() => (
+                                      <Form.Item
+                                        {...field}
+                                        label="Ingredient"
+                                        name={[field.name, "ingredientId"]}
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message:
+                                              "Veillez choisir un ingrédient !",
+                                          },
+                                        ]}
+                                      >
+                                        <Select>
+                                          {listIngredients.map((ingr) => {
+                                            return (
+                                              <Select.Option
+                                                key={ingr?._id}
+                                                value={ingr?._id}
+                                              >
+                                                {ingr?.name}
+                                              </Select.Option>
+                                            );
+                                          })}
+                                        </Select>
+                                      </Form.Item>
+                                    )}
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...field}
+                                    label="Grammage"
+                                    name={[field.name, "weight"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message:
+                                          "Veillez indiquer le grammage de l'ingrédient !",
+                                      },
+                                    ]}
+                                  >
+                                    <InputNumber />
+                                  </Form.Item>
+
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(field.name)}
+                                  />
+                                </Space>
+                              ))}
+
+                              <Form.Item>
+                                <Button
+                                  type="dashed"
+                                  onClick={() => add()}
+                                  block
+                                  icon={<PlusOutlined />}
                                 >
-                                  <InputNumber />
-                                </Form.Item>
+                                  Ajouter un ingrédient
+                                </Button>
+                              </Form.Item>
+                            </>
+                          )}
+                        </Form.List>
+                      </div>
+                    );
+                  case "steps":
+                    return (
+                      <div className="formList">
+                        <Form.List name="steps">
+                          {(fields, { add, remove }) => (
+                            <>
+                              {fields.map((field) => (
+                                <Space
+                                  key={field.key}
+                                  align="baseline"
+                                  style={{
+                                    display: "flex",
+                                    marginBottom: 8,
+                                  }}
+                                >
+                                  <Form.Item
+                                    noStyle
+                                    shouldUpdate={(prevValues, curValues) =>
+                                      prevValues.area !== curValues.area ||
+                                      prevValues.sights !== curValues.sights
+                                    }
+                                  >
+                                    {() => (
+                                      <Form.Item
+                                        {...field}
+                                        label="Numéro de l'étape"
+                                        name={[field.name, "nbStep"]}
+                                        rules={[
+                                          {
+                                            required: true,
+                                            message:
+                                              "Veillez choisir un ingrédient !",
+                                          },
+                                        ]}
+                                      >
+                                        <Select>
+                                          {listNumSteps.map((num) => {
+                                            return (
+                                              <Select.Option
+                                                key={num}
+                                                value={num}
+                                              >
+                                                {num}
+                                              </Select.Option>
+                                            );
+                                          })}
+                                        </Select>
+                                      </Form.Item>
+                                    )}
+                                  </Form.Item>
+                                  <Form.Item
+                                    {...field}
+                                    label="Description"
+                                    name={[field.name, "descStep"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message:
+                                          "Veillez indiquer une description pour cette étape !",
+                                      },
+                                    ]}
+                                  >
+                                    <Input.TextArea />
+                                  </Form.Item>
 
-                                <MinusCircleOutlined
-                                  onClick={() => remove(field.name)}
-                                />
-                              </Space>
-                            ))}
+                                  <MinusCircleOutlined
+                                    onClick={() => remove(field.name)}
+                                  />
+                                </Space>
+                              ))}
 
-                            <Form.Item>
-                              <Button
-                                type="dashed"
-                                onClick={() => add()}
-                                block
-                                icon={<PlusOutlined />}
-                              >
-                                Ajouter un ingrédient
-                              </Button>
-                            </Form.Item>
-                          </>
-                        )}
-                      </Form.List>
+                              <Form.Item>
+                                <Button
+                                  type="dashed"
+                                  onClick={() => add()}
+                                  block
+                                  icon={<PlusOutlined />}
+                                >
+                                  Ajouter une étape
+                                </Button>
+                              </Form.Item>
+                            </>
+                          )}
+                        </Form.List>
+                      </div>
                     );
                   default:
                     null;
