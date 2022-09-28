@@ -1,60 +1,49 @@
 import axiosConfig from "./axios";
 
-// export const createMenu = async (values, idUser, idRestaurant) => {
-//   const dataProduct = values;
-//   const configHeader = {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   };
-//   const response = await axiosConfig.post(
-//     `/users/${idUser}/restaurants/${idRestaurant}/menus`,
-//     dataProduct,
-//     configHeader
-//   );
-//   const data = await response.data;
-//   return data;
-// };
+export const createIngredient = async (dataValues) => {
+  const configHeader = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axiosConfig.post(
+    `/ingredients`,
+    dataValues,
+    configHeader
+  );
+  const data = await response.data;
+  return data;
+};
 
 export const getListIngredient = async () => {
-  const response = await axiosConfig.get(
-    `/ingredients`,
-    {}
-  );
+  const response = await axiosConfig.get(`/ingredients`, {});
   const data = await response.data;
   return data;
 };
 
 export const getIngredientById = async (id) => {
-    const response = await axiosConfig.get(
-      `/ingredients/${id}`,
-      {}
-    );
-    const data = await response.data;
-    return data;
-  };
-
-export const deleteIngredient = async (id) => {
-  const response = await axiosConfig.delete(
-    `/ingredients/${id}`,
-    {}
-  );
+  const response = await axiosConfig.get(`/ingredients/${id}`, {});
   const data = await response.data;
   return data;
 };
 
-// export const updateFrisbee = async (values, idUser, idRestaurant, idMenu) => {
-//   const dataProduct = values;
-//   const configHeader = {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   };
-//   const response = await axiosConfig.put(
-//     `/users/${idUser}/restaurants/${idRestaurant}/menus/${idMenu}`,
-//     dataProduct,
-//     configHeader
-//   );
-//   const data = await response.data;
-//   return data;
-// };
+export const deleteIngredient = async (id) => {
+  const response = await axiosConfig.delete(`/ingredients/${id}`, {});
+  const data = await response.data;
+  return data;
+};
+
+export const updateIngredient = async (dataValues, id) => {
+  const configHeader = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axiosConfig.put(
+    `/ingredients/${id}`,
+    dataValues,
+    configHeader
+  );
+  const data = await response.data;
+  return data;
+};

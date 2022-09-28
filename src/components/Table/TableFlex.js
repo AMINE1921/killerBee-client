@@ -92,7 +92,7 @@ const TableFlex = ({ page, data, deleteItem }) => {
                 size="middle"
                 onClick={() =>
                   navigate(`/${page}/${record?._id}`, {
-                    state: { id: record?._id },
+                    state: { id: record?._id, type: page },
                   })
                 }
               >
